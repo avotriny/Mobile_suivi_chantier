@@ -1,27 +1,15 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// App.jsx
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ContextProvider from './src/components/context/ContextProvider';
+import AppContent from './src/components/AppContent';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View, Text } from 'react-native';
-
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Mety</Text>
-    </View>
+    <SafeAreaProvider>
+      <ContextProvider>
+        <AppContent />
+      </ContextProvider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-export default App;
