@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useValue } from '../../components/context/ContextProvider';
+import { useValue } from '../context/ContextProvider';
 
 export default function CustomHeader({ navigation }) {
   const { state, dispatch } = useValue();
@@ -13,6 +13,7 @@ export default function CustomHeader({ navigation }) {
     await AsyncStorage.multiRemove(['authToken', 'currentUser']);
     dispatch({ type: 'UPDATE_USER', payload: null });
     setMenuVisible(false);
+    navigation.replace('Auth'); // or login screen
   };
 
   return (
@@ -26,7 +27,7 @@ export default function CustomHeader({ navigation }) {
       </View>
 
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
-        {user && user.photoURL ? (
+        {user?.photoURL ? (
           <Image source={{ uri: user.photoURL }} style={styles.avatar} />
         ) : (
           <MaterialCommunityIcons name="account-circle" size={32} color="#fff" />
@@ -35,13 +36,14 @@ export default function CustomHeader({ navigation }) {
 
       <Modal
         animationType="fade"
-        transparent={true}
+        transparent
         visible={menuVisible}
         onRequestClose={() => setMenuVisible(false)}
       >
         <Pressable style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
           <View style={styles.menuContainer}>
-            <Text style={styles.menuTitle}>{user?.name}</Text>
+            <Text style={styles.menuTitle}>{user?.name || 'Utilisateur'}</Text>
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => {
@@ -51,6 +53,7 @@ export default function CustomHeader({ navigation }) {
             >
               <Text style={styles.menuText}>Dashboard</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => {
@@ -60,6 +63,7 @@ export default function CustomHeader({ navigation }) {
             >
               <Text style={styles.menuText}>Modifier Photo de profil</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
               <Text style={[styles.menuText, { color: 'red' }]}>Se déconnecter</Text>
             </TouchableOpacity>
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.2)'
+    backgroundColor: 'rgba(0,0,0,0.2)',
   },
   menuContainer: {
     backgroundColor: '#fff',
