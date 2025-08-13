@@ -67,7 +67,12 @@ export default function AuthScreen({ navigation }) {
         dispatch({ type: 'UPDATE_ALERT', payload: { open: true, severity: 'error', message: data.message } });
         return;
       }
-      // Après inscription, passer au login
+     const user = data.result;
+      await AsyncStorage.multiSet([
+        ['authToken', user.token],
+        ['currentUser', JSON.stringify(user)],
+      ]);
+      dispatch({ type: 'UPDATE_USER', payload: user });
       setIsRegister(false);
     } catch (err) {
       dispatch({ type: 'UPDATE_ALERT', payload: { open: true, severity: 'error', message: err.response?.data?.message || 'Erreur réseau' } });
