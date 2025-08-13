@@ -60,7 +60,7 @@ export default function ProfileScreen() {
     setLoading(true);
     try {
       const token = await AsyncStorage.getItem('authToken');
-      const { data } = await axios.post(
+      const { data } = await axios.patch(
         'http://10.0.2.2:5000/user/updateProfile',
         { name: values.name, photoURL: values.photoURL || '' },
         { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
