@@ -1,28 +1,25 @@
-// src/AppContent.jsx
-import React from 'react';
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { useValue } from './context/ContextProvider';
-import AppMain from './AppMain';
-import Notification from './Notification/Notification';
 import Loading from './Loading/Loading';
+import Notification from './Notification/Notification';
 import AuthScreen from '../Screen/AuthScreen/AuthScreen';
+import AppMain from './AppMain';
+
 
 export default function AppContent() {
   const { state: { loading, currentUser } } = useValue();
 
   return (
     <Fragment>
-      {/* Toujours rendre Notification */}
       <Notification />
-
-      {/* Si on charge, on affiche Loading */}
       {loading && <Loading />}
-
-      {/* Si pas de user et pas en train de charger, on affiche la page de login */}
       {!loading && !currentUser && <AuthScreen />}
-
-      {/* Si user connecté, on affiche l’app principale */}
-      {!loading && currentUser && <AppMain />}
+      {!loading && currentUser && (
+        <NavigationContainer>
+          <AppMain />
+        </NavigationContainer>
+      )}
     </Fragment>
   );
 }
